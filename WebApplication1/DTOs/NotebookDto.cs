@@ -23,15 +23,17 @@ namespace WebApplication1.DTOs.Notebooks
 
     public class CreateNotebookDto
     {
-        [Required]
-        [StringLength(100)]
+        [Required(ErrorMessage = "Название блокнота обязательно")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "Название должно быть от 1 до 100 символов")]
+        [RegularExpression(@"^[a-zA-Zа-яА-Я0-9\s\.\-_]+$", ErrorMessage = "Название может содержать только буквы, цифры, пробелы и символы .-_")]
         public string Title { get; set; } = string.Empty;
     }
 
     public class UpdateNotebookDto
     {
-        [Required]
-        [StringLength(100)]
+        [Required(ErrorMessage = "Название блокнота обязательно")]
+        [StringLength(100, MinimumLength = 1, ErrorMessage = "Название должно быть от 1 до 100 символов")]
+        [RegularExpression(@"^[a-zA-Zа-яА-Я0-9\s\.\-_]+$", ErrorMessage = "Название может содержать только буквы, цифры, пробелы и символы .-_")]
         public string Title { get; set; } = string.Empty;
     }
 }

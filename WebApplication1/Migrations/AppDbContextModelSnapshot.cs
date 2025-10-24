@@ -167,12 +167,26 @@ namespace WebApplication1.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime?>("LastLoginAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -230,6 +244,7 @@ namespace WebApplication1.Migrations
 
                     b.Property<string>("Content")
                         .IsRequired()
+                        .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
@@ -240,7 +255,11 @@ namespace WebApplication1.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("NotebookId");
+                    b.HasIndex("CreatedAt")
+                        .HasDatabaseName("IX_Notes_CreatedAt");
+
+                    b.HasIndex("NotebookId")
+                        .HasDatabaseName("IX_Notes_NotebookId");
 
                     b.ToTable("Notes");
                 });
@@ -258,15 +277,26 @@ namespace WebApplication1.Migrations
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OwnerId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("OwnerId")
+                        .HasDatabaseName("IX_Notebooks_OwnerId");
+
+                    b.HasIndex("OwnerId1");
+
+                    b.HasIndex("Title")
+                        .HasDatabaseName("IX_Notebooks_Title");
 
                     b.ToTable("Notebooks");
                 });
@@ -335,11 +365,15 @@ namespace WebApplication1.Migrations
 
             modelBuilder.Entity("WebApplication1.Models.Notebook", b =>
                 {
-                    b.HasOne("WebApplication1.Models.ApplicationUser", "Owner")
-                        .WithMany("Notebooks")
+                    b.HasOne("WebApplication1.Models.ApplicationUser", null)
+                        .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("WebApplication1.Models.ApplicationUser", "Owner")
+                        .WithMany("Notebooks")
+                        .HasForeignKey("OwnerId1");
 
                     b.Navigation("Owner");
                 });
